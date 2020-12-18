@@ -1,23 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
 
 function App() {
+  const [input, setInput] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [status, setStatus] = useState("all");
+  const [filter, setFilter] = useState([]);
+
+  useEffect(() => {
+    getLocalTodos();
+  }, []);
+  useEffect(() => {
+    filterHandler();
+    saveLocalTodos();
+  }, [todos, status]);
+
+  const filterHandler = () => {
+    switch (status) {
+      case "completed":
+        setFilter(todos.filter((todo) => todo.completed === true));
+        break;
+      case "uncompleted":
+        setFilter(todos.filter((todo) => todo.completed === false));
+        break;
+      default:
+        setFilter(todos);
+    }
+  };
+
+  const saveLocalTodos = () => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  };
+  const getLocalTodos = () => {
+    if (localStorage.getItem("todos") === null) {
+      localStorage.setItem("todos", JSON.stringify([]));
+    } else {
+      let todoLocal = JSON.parse(localStorage.getItem("todos"));
+      setTodos(todoLocal);
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header>
+        <h3>What's going on?</h3>
       </header>
+      <TodoForm
+        todos={todos}
+        setTodos={setTodos}
+        input={input}
+        setInput={setInput}
+        setStatus={setStatus}
+      />
+      <TodoList todos={todos} setTodos={setTodos} filter={filter} />
     </div>
   );
 }
