@@ -1,6 +1,6 @@
 import React from "react";
 
-function TodoForm({ input, setInput, todos, setTodos, setStatus}) {
+function TodoForm({ input, setInput, todos, setTodos, setStatus }) {
   const handleInput = (e) => {
     setInput(e.target.value);
   };
@@ -28,7 +28,12 @@ function TodoForm({ input, setInput, todos, setTodos, setStatus}) {
         className="todo-input"
         onChange={handleInput}
       />
-      <button className="todo-button" onSubmit={handleSubmit}>
+      <button
+        className="todo-button"
+        onSubmit={handleSubmit}
+        required
+        disabled={!input}
+      >
         <i className="fas fa-plus-square"></i>
       </button>
       <div className="select">
